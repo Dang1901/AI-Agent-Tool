@@ -1,0 +1,11 @@
+/* Reset margin/padding */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  /* Cho Radix hoặc các container cao full screen */
+  #root {
+    height: 100%;
+  }

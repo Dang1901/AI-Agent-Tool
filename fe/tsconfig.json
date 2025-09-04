@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@app": ["src/app/index.ts", "src/app"],
+      "@app/*": ["src/app/*"],
+
+      "@api": ["src/api/index.ts", "src/api"],
+      "@api/*": ["src/api/*"],
+
+      "@assets": ["src/assets"],
+      "@assets/*": ["src/assets/*"],
+
+      "@components": ["src/components/index.ts", "src/components"],
+      "@components/*": ["src/components/*"],
+
+      "@applications": ["src/applications/index.ts", "src/applications"],
+      "@applications/*": ["src/applications/*"],
+
+      "@features": ["src/features/index.ts", "src/features"],
+      "@features/*": ["src/features/*"],
+
+      "@hooks": ["src/hooks/index.ts", "src/hooks"],
+      "@hooks/*": ["src/hooks/*"],
+
+      "@pages": ["src/pages/index.ts", "src/pages"],
+      "@pages/*": ["src/pages/*"],
+
+      "@router": ["src/router/index.ts", "src/router"],
+      "@router/*": ["src/router/*"],
+
+      "@store": ["src/store/index.ts", "src/store"],
+      "@store/*": ["src/store/*"],
+
+      "@types/*": ["src/types/*"]
+    }
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
