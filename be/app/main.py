@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.database import engine
@@ -8,8 +9,7 @@ from app.routers import user as user_router
 from app.db import Base
 from app.model import user, feature as feature_model, rbac as rbac_model, abac as abac_model
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Tables will be created on startup event
 
 
 app = FastAPI(
@@ -27,6 +27,17 @@ allow_credentials=True,
 allow_methods=["*"],
 allow_headers=["*"],
 )
+
+# Startup event
+@app.on_event("startup")
+async def startup_event():
+    """Create database tables on startup"""
+    if os.getenv("DATABASE_URL"):
+        try:
+            Base.metadata.create_all(bind=engine)
+            print("✅ Database tables created/updated on startup")
+        except Exception as e:
+            print(f"❌ Failed to create database tables on startup: {e}")
 
 # Health check endpoint
 @app.get("/health")
