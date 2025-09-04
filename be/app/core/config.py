@@ -13,6 +13,11 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 # Database configuration with fallback to SQLite
 DB_URL = os.getenv("DATABASE_URL")
+if not DB_URL:
+    # Fallback to local PostgreSQL for development
+    DB_URL = "postgresql://postgres:190123@localhost:5432/myapp"
+
+print(f"🔍 DATABASE_URL: {DB_URL}")
 
 def verify_token(token: str, db: Session):
     try:
