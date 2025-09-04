@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ["python39", "pip"]
+nixPkgs = ["python311"]
 
 [phases.install]
-cmds = ["cd be && pip install -r requirements.txt"]
+cmds = ["cd be && python -m pip install -r requirements.txt"]
 
 [phases.build]
 cmds = ["echo 'Build completed'"]
