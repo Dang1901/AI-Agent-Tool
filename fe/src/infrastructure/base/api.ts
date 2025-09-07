@@ -2,7 +2,7 @@ import { getToken, saveTokens } from "@store/localStorage";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL: import.meta.env.VITE_API_URL || "https://ai-agent-tool-production-xxxx.up.railway.app",
   headers: {
     "Content-Type": "application/json",
   },
@@ -23,7 +23,7 @@ api.interceptors.response.use(
 
       const refreshToken = getToken("refresh_token");
       try {
-        const res = await axios.post("http://localhost:8000/api/v1/auth/refresh", { token: refreshToken });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/auth/refresh`, { token: refreshToken });
         const newAccessToken = res.data.access_token;
         saveTokens(newAccessToken, refreshToken);
 
