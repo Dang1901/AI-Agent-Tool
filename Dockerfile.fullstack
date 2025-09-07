@@ -1,0 +1,64 @@
+# Multi-stage build cho cả BE và FE
+FROM node:18-alpine AS frontend-build
+
+# Build FE
+WORKDIR /app/fe
+COPY fe/package*.json ./
+RUN npm install
+COPY fe/ ./
+RUN npm run build
+
+# Backend stage
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    nginx \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY be/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend code
+COPY be/ ./
+
+# Copy built frontend
+COPY --from=frontend-build /app/fe/dist ./static
+
+# Create nginx config
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /app/static; \
+        try_files $uri $uri/ /index.html; \
+    } \
+    location /api/ { \
+        proxy_pass http://localhost:8000/; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+    } \
+}' > /etc/nginx/sites-available/default
+
+# Set default port
+ENV PORT=8000
+
+# Create startup script
+RUN echo '#!/bin/bash \
+nginx & \
+python -m app \
+' > /app/start.sh && chmod +x /app/start.sh
+
+# Create non-root user
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Expose port
+EXPOSE $PORT
+
+# Start both nginx and backend
+CMD ["sh", "-c", "nginx & python -m app"]

@@ -35,6 +35,13 @@ app = FastAPI(
 allow_origins_env = os.getenv("ALLOW_ORIGINS", "http://localhost:5173")
 ALLOW_ORIGINS = [o.strip() for o in allow_origins_env.split(",") if o.strip()]
 
+# Thêm domain FE Railway vào CORS (sẽ được set trên Railway)
+if os.getenv("RAILWAY_ENVIRONMENT"):
+    # Tự động thêm domain FE nếu có biến môi trường FE_URL
+    fe_url = os.getenv("FE_URL")
+    if fe_url and fe_url not in ALLOW_ORIGINS:
+        ALLOW_ORIGINS.append(fe_url)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOW_ORIGINS,
