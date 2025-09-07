@@ -1,1 +1,1 @@
-web: cd be && python -m app
+web: sh -c "cd be && python -m app"
