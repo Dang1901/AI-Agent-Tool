@@ -6,9 +6,12 @@ Run this after initializing the database
 
 import requests
 import json
+import os
 from typing import Dict, Any
 
-BASE_URL = "http://localhost:8000"
+# Get port from environment or default to 8000
+PORT = os.getenv("PORT", "8000")
+BASE_URL = f"http://localhost:{PORT}"
 
 def test_api_endpoint(method: str, endpoint: str, data: Dict[str, Any] = None, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """Test API endpoint and return response"""

@@ -71,6 +71,11 @@ async def startup_event():
         raise
 
 
+# ==== Root endpoint ====
+@app.get("/")
+def root():
+    return {"ok": True, "message": "IAM System API is running", "docs": "/docs", "health": "/health"}
+
 # ==== Health check ====
 @app.get("/health")
 def health_check():

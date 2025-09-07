@@ -65,8 +65,10 @@ print('✅ Database tables created/updated')
 # Health check
 echo "🏥 Running health check..."
 sleep 5
-curl -f http://localhost:8000/health || echo "❌ Health check failed"
+ PORT=${PORT:-8000}
+curl -f http://localhost:$PORT/health || echo "❌ Health check failed"
 
 echo "✅ Deployment to staging completed!"
-echo "🌐 Backend API: http://localhost:8000"
-echo "📚 API Docs: http://localhost:8000/docs"
+echo "🌐 Backend API: http://localhost:$PORT"
+echo "📚 API Docs: http://localhost:$PORT/docs"
+    
