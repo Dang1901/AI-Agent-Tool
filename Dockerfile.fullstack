@@ -47,12 +47,6 @@ RUN echo 'server { \
 # Set default port
 ENV PORT=8000
 
-# Create startup script
-RUN echo '#!/bin/bash \
-nginx & \
-python -m app \
-' > /app/start.sh && chmod +x /app/start.sh
-
 # Create non-root user
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
