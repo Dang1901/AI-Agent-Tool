@@ -60,11 +60,14 @@ def run_staging():
         print(f"❌ Failed to create tables: {e}")
         return False
     
+    # Get port from environment or default to 8000
+    port = os.getenv("PORT", "8000")
+    
     # Start the server
     print("🏃 Starting FastAPI server...")
-    print("🌐 Backend API: http://localhost:8000")
-    print("📚 API Docs: http://localhost:8000/docs")
-    print("🏥 Health Check: http://localhost:8000/health")
+    print(f"🌐 Backend API: http://localhost:{port}")
+    print(f"📚 API Docs: http://localhost:{port}/docs")
+    print(f"🏥 Health Check: http://localhost:{port}/health")
     print("\nPress Ctrl+C to stop the server")
     
     try:
@@ -72,7 +75,7 @@ def run_staging():
             sys.executable, "-m", "uvicorn", 
             "app.main:app", 
             "--host", "0.0.0.0", 
-            "--port", "8000",
+            "--port", port,
             "--reload"
         ])
     except KeyboardInterrupt:
