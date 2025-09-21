@@ -1,6 +1,13 @@
 import { NavLink } from 'react-router-dom'
 import { Box, Flex, Text } from '@radix-ui/themes'
-import { DashboardIcon, PersonIcon, ChevronDownIcon } from '@radix-ui/react-icons'
+import { 
+  DashboardIcon, 
+  ChevronDownIcon,
+  GearIcon,
+  FileTextIcon,
+  LockClosedIcon,
+  ActivityLogIcon
+} from '@radix-ui/react-icons'
 
 type SidebarProps = {
   collapsed: boolean
@@ -16,21 +23,23 @@ export default function Sidebar({ collapsed }: SidebarProps) {
 
   const groups: Array<{ title: string; items: NavItem[] }> = [
     {
-      title: 'Administration overview',
+      title: 'Main',
       items: [
         { label: 'Dashboard Overview', to: '/overview', icon: DashboardIcon },
-        {
-          label: 'IAM',
-          to: '/iam',
-          icon: PersonIcon,
-          children: [
-            { label: 'Users', to: '/users' },
-            { label: 'Roles', to: '/roles' },
-            { label: 'Permissions', to: '/permissions' },
-            { label: 'Policies', to: '/policies' },
-            { label: 'Features', to: '/features' },
-          ],
-        },
+      ],
+    },
+    {
+      title: 'Environment Variables',
+      items: [
+        { label: 'Environment Variables', to: '/envvars', icon: GearIcon },
+        { label: 'Releases', to: '/releases', icon: FileTextIcon },
+        { label: 'Audit Log', to: '/audit', icon: LockClosedIcon },
+      ],
+    },
+    {
+      title: 'Development',
+      items: [
+        { label: 'API Logs', to: '/logs', icon: ActivityLogIcon },
       ],
     },
   ] as const

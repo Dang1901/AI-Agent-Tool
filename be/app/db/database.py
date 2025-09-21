@@ -7,7 +7,7 @@ from app.core.config import DB_URL
 engine = create_engine(
     DB_URL,
     pool_pre_ping=True,  # giúp tránh lỗi connection drop
-    connect_args={"check_same_thread": False} if DB_URL.startswith("sqlite") else {}
+    echo=False  # Set to True for SQL debugging
 )
 
 # SessionLocal cho mỗi request

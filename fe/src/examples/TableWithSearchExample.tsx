@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { Button, Flex, Text, TextField, Select } from '@radix-ui/themes'
 import { useTableParams, useSearch } from '@hooks'
 
@@ -15,7 +15,7 @@ export default function TableWithSearchExample() {
 
   const search = useSearch({ debounceMs: 500, minLength: 2 })
 
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  // const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Example API call with all parameters
   // const { data, isLoading } = useQuery({

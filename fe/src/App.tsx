@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { router } from './router'
 import { persistor, store } from '@store/store'
 import { Theme } from '@radix-ui/themes'
+import { ToastProvider } from './contexts/ToastContext'
 import '@radix-ui/themes/styles.css'
 
 
@@ -27,7 +28,9 @@ export default function App() {
             scaling="100%"
             accentColor="indigo"
           >
+            <ToastProvider>
               <RouterProvider router={router} />
+            </ToastProvider>
           </Theme>
         </PersistGate>
       </QueryClientProvider>

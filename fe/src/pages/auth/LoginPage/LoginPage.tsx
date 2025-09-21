@@ -64,6 +64,8 @@ const LoginPage = () => {
                       return detail
                     } else if (Array.isArray(detail)) {
                       return detail.map(err => err.msg).join(', ')
+                    } else if (detail && typeof detail === 'object') {
+                      return JSON.stringify(detail)
                     } else {
                       return 'Login failed. Please try again.'
                     }

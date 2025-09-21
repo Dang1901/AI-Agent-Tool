@@ -1,30 +1,19 @@
 import os
 from dotenv import load_dotenv
 
-# Optional: chỉ load .env khi không phải production (Railway không cần .env)
-ENV = os.getenv("ENV", "development").lower()
-if ENV != "production":
-    load_dotenv()
+# Load environment variables
+load_dotenv()
 
 # ==== Security ====
-SECRET_KEY = os.getenv("SECRET_KEY", "super-secret")  # nhớ đặt trên Railway
-ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
-REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
+SECRET_KEY = os.getenv("SECRET_KEY", "super-secret")
+ENCRYPTION_MASTER_KEY = os.getenv("ENCRYPTION_MASTER_KEY", "encryption-master-key-for-development-only")
 
 # ==== Database URL ====
 DB_URL = os.getenv("DATABASE_URL")
 
 if not DB_URL:
-    if ENV == "development":
-        # Chỉ fallback khi DEV local
-        DB_URL = os.getenv(
-            "DEV_DATABASE_URL",
-            "postgresql://postgres:190123@localhost:5432/myapp",
-        )
-    else:
-        # Trên Railway/production: bắt buộc phải có, để tránh trỏ nhầm localhost
-        raise RuntimeError("DATABASE_URL is not set. Configure it in Railway Variables.")
+    # Default to local PostgreSQL database
+    DB_URL = "postgresql://postgres:password@localhost:5432/test_env"
 
 def mask_db_url(url: str) -> str:
     try:

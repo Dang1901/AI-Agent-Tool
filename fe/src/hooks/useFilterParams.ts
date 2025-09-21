@@ -4,13 +4,13 @@ export interface FilterState {
   [key: string]: any
 }
 
-export interface FilterConfig {
-  initialFilters?: FilterState
+export interface FilterConfig<T extends FilterState = FilterState> {
+  initialFilters?: T
   debounceMs?: number
 }
 
 export function useFilterParams<T extends FilterState = FilterState>(
-  config: FilterConfig = {}
+  config: FilterConfig<T> = {}
 ) {
   const {
     initialFilters = {} as T,
@@ -21,7 +21,7 @@ export function useFilterParams<T extends FilterState = FilterState>(
   const [debouncedFilters, setDebouncedFilters] = useState<T>(initialFilters)
 
   // Debounce filter changes
-  const debounceTimeoutRef = useRef<NodeJS.Timeout>()
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const updateFilters = useCallback((newFilters: Partial<T>) => {
     setFilters(prev => ({ ...prev, ...newFilters }))
@@ -49,8 +49,8 @@ export function useFilterParams<T extends FilterState = FilterState>(
   }, [filters])
 
   const clearFilters = useCallback(() => {
-    setFilters(initialFilters)
-    setDebouncedFilters(initialFilters)
+    setFilters(initialFilters as T)
+    setDebouncedFilters(initialFilters as T)
   }, [initialFilters])
 
   const hasActiveFilters = useMemo(() => {

@@ -4,6 +4,7 @@ import { Box, Button, Flex, Heading } from '@radix-ui/themes'
 import { ExitIcon, HamburgerMenuIcon } from '@radix-ui/react-icons'
 import { useLogout } from '@applications/mutations/auth'
 import Sidebar from './Sidebar'
+import { ToastContainer } from '../components/Toast'
 
 export default function DashboardLayout() {
   const nav = useNavigate()
@@ -67,6 +68,9 @@ export default function DashboardLayout() {
           <Outlet />
         </Box>
       </Flex>
+      
+      {/* Toast Container */}
+      <ToastContainer />
     </Flex>
   )
 }

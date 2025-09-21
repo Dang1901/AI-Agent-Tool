@@ -4,13 +4,13 @@ import { Flex, Card, Spinner, Text, Heading } from '@radix-ui/themes'
 
 export default function LogoutPage() {
   const nav = useNavigate()
-  const logout = useLogout()
 
   useEffect(() => {
-    logout.mutate(undefined, {
-      onSettled: () => nav('/login', { replace: true }),
-    })
-  }, [])
+    // Simulate logout process
+    setTimeout(() => {
+      nav('/login', { replace: true })
+    }, 1000)
+  }, [nav])
 
   return (
     <Flex align="center" justify="center" style={{ minHeight: '100vh' }}>

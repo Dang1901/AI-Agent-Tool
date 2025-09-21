@@ -2,6 +2,7 @@
 import { clearSession, setSession } from '@store/slice'
 import { store } from '@store/store'
 import axios from 'axios'
+import { loggerService } from '../services/logger'
 
 // Token ở memory (không persist)
 let ACCESS_TOKEN: string | null = null
@@ -15,6 +16,21 @@ export const api = axios.create({
 
 // Gắn access token vào header nếu có
 api.interceptors.request.use((config) => {
+  const startTime = Date.now();
+  (config as { startTime?: number }).startTime = startTime;
+  
+  // Log request
+  loggerService.addLog({
+    method: config.method?.toUpperCase() || 'GET',
+    url: config.url || '',
+    requestData: {
+      params: config.params,
+      data: config.data,
+      headers: config.headers
+    },
+    type: 'request'
+  });
+
   if (ACCESS_TOKEN) {
     config.headers = config.headers ?? {}
     config.headers.Authorization = `Bearer ${ACCESS_TOKEN}`
@@ -27,17 +43,51 @@ let refreshing = false
 let pending: Array<() => void> = []
 
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    const requestConfig = res.config as { startTime?: number };
+    const duration = requestConfig.startTime ? Date.now() - requestConfig.startTime : undefined;
+    
+    // Log successful response
+    loggerService.addLog({
+      method: res.config.method?.toUpperCase() || 'GET',
+      url: res.config.url || '',
+      status: res.status,
+      statusText: res.statusText,
+      responseData: {
+        data: res.data,
+        headers: res.headers
+      },
+      duration,
+      type: 'response'
+    });
+    
+    return res;
+  },
   async (error) => {
-    const { config, response } = error
-    if (response?.status === 401 && !config._retry) {
+    const errorConfig = error.config as { startTime?: number; _retry?: boolean };
+    const duration = errorConfig?.startTime ? Date.now() - errorConfig.startTime : undefined;
+    
+    // Log error response
+    loggerService.addLog({
+      method: error.config?.method?.toUpperCase() || 'UNKNOWN',
+      url: error.config?.url || 'UNKNOWN',
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      responseData: error.response?.data,
+      error: error.message,
+      duration,
+      type: 'error'
+    });
+    
+    const { config: originalConfig, response } = error
+    if (response?.status === 401 && !originalConfig._retry) {
       if (refreshing) {
         await new Promise<void>((resolve) => pending.push(resolve))
-        config._retry = true
-        return api(config)
+        originalConfig._retry = true
+        return api(originalConfig)
       }
       refreshing = true
-      config._retry = true
+      originalConfig._retry = true
       try {
         // gọi refresh — cookie httpOnly sẽ tự gửi kèm
         const r = await axios.post(
@@ -53,7 +103,7 @@ api.interceptors.response.use(
         }
         pending.forEach((fn) => fn())
         pending = []
-        return api(config)
+        return api(originalConfig)
       } catch (e) {
         setAccessToken(null)
         store.dispatch(clearSession())

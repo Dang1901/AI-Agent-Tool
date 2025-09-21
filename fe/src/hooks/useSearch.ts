@@ -14,7 +14,7 @@ export function useSearch(config: SearchConfig = {}) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
-  const debounceTimeoutRef = useRef<NodeJS.Timeout>()
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const updateSearch = useCallback((term: string) => {
     setSearchTerm(term)
